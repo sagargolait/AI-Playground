@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Offline - AI Chat</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        background: #18181b;
+        color: #fff;
+      }
+      .offline-message {
+        text-align: center;
+        padding: 2rem;
+      }
+      .retry-button {
+        background: #87a9ff;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        color: white;
+        cursor: pointer;
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="offline-message">
+      <h1>You're Offline</h1>
+      <p>Please check your internet connection and try again.</p>
+      <button class="retry-button" onclick="window.location.reload()">
+        Retry Connection
+      </button>
+    </div>
+  </body>
+</html>

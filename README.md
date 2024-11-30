@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Chat Application
 
-## Getting Started
+A modern, feature-rich chat application powered by AI models with offline support, real-time streaming, and a beautiful UI.
 
-First, run the development server:
+![AI Chat Demo](./public/demo.gif)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🌟 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Core Functionality
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 🤖 Support for multiple AI models (Google Gemini, OpenAI)
+- 💬 Real-time message streaming
+- 🔄 Automatic retry logic with exponential backoff
+- 📱 Responsive design for all devices
+- 🌓 Dark/Light mode support
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Performance & Reliability
 
-## Learn More
+- ⚡ Edge runtime support
+- 🔄 Automatic retry with exponential backoff
+- 📶 Offline support with Service Workers
+- 💾 IndexedDB chat history caching
+- 🔍 Detailed logging system
 
-To learn more about Next.js, take a look at the following resources:
+### User Experience
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- ✨ Modern, clean UI with Tailwind CSS
+- 📝 Code syntax highlighting
+- 📋 Copy code functionality
+- 💾 Download chat history
+- 🔍 Search through conversations
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🚀 Getting Started
 
-## Deploy on Vercel
+### Prerequisites
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Node.js 18+
+- npm or yarn
+- Google AI API key or OpenAI API key
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Installation
+
+1. Clone the repository:
