@@ -96,8 +96,16 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground min-h-screen w-full overflow-x-hidden;
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    @apply overflow-x-hidden;
+    margin: 0;
+    padding: 0;
   }
 }
 
