@@ -125,7 +125,9 @@
   background: #6b7280;
 }
 @supports (padding: max(0px)) {
-  .mb-safe {
-    margin-bottom: 90px;
+  @media (max-height: 800px) {
+    .mb-safe {
+      margin-bottom: 90px;
+    }
   }
 }
