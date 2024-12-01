@@ -126,6 +126,6 @@
 }
 @supports (padding: max(0px)) {
   .mb-safe {
-    margin-bottom: env(safe-area-inset-bottom, 24px);
+    margin-bottom: 90px;
   }
 }
