@@ -1,5 +1,28 @@
 /// <reference lib="webworker" />
 
+// Explicitly define the service worker context type
+type ServiceWorkerContext = ServiceWorkerGlobalScope & typeof globalThis;
+
+// Type guard to check if we're in a service worker context
+function isServiceWorkerContext(
+  context: unknown
+): context is ServiceWorkerContext {
+  return (
+    context !== undefined &&
+    "addEventListener" in (context as ServiceWorkerContext) &&
+    "caches" in (context as ServiceWorkerContext)
+  );
+}
+
+// Check and assert service worker context
+const workerContext = isServiceWorkerContext(self)
+  ? (self as ServiceWorkerContext)
+  : undefined;
+
+if (!workerContext) {
+  throw new Error("This script must be run in a service worker context");
+}
+
 const CACHE_NAME = "ai-chat-cache-v1";
 const OFFLINE_URL = "/offline.html";
 
@@ -9,16 +32,49 @@ const STATIC_ASSETS = [
   "/manifest.json",
   "/favicon.ico",
   "/styles.css",
-  // Add other static assets you want to cache
 ];
 
-self.addEventListener("install", (event: ExtendableEvent) => {
+interface ChatMessage {
+  id: string;
+  content: string;
+  // add other necessary message properties
+}
+
+// Add this interface near the top with other type definitions
+interface SyncEvent extends ExtendableEvent {
+  tag: string;
+}
+
+async function getFailedMessages(): Promise<ChatMessage[]> {
+  const cache = await caches.open(CACHE_NAME);
+  const failedMessagesResponse = await cache.match("failed-messages");
+  return failedMessagesResponse ? await failedMessagesResponse.json() : [];
+}
+
+async function sendMessage(message: ChatMessage): Promise<void> {
+  // Implement your message sending logic here
+  await fetch("/api/messages", {
+    method: "POST",
+    body: JSON.stringify(message),
+  });
+}
+
+async function removeFromFailedMessages(message: ChatMessage): Promise<void> {
+  const cache = await caches.open(CACHE_NAME);
+  const failedMessages = await getFailedMessages();
+  const updatedMessages = failedMessages.filter((m) => m.id !== message.id);
+  await cache.put(
+    "failed-messages",
+    new Response(JSON.stringify(updatedMessages))
+  );
+}
+
+workerContext.addEventListener("install", ((event: ExtendableEvent) => {
   event.waitUntil(
     (async () => {
-      const cache = await caches.open(CACHE_NAME);
-      // Cache static assets
+      const cache = await workerContext.caches.open(CACHE_NAME);
       await cache.addAll(STATIC_ASSETS);
-      // Cache offline page
+
       const offlineResponse = new Response(
         "You are offline. Please check your internet connection.",
         {
@@ -28,46 +84,42 @@ self.addEventListener("install", (event: ExtendableEvent) => {
       await cache.put(OFFLINE_URL, offlineResponse);
     })()
   );
-});
+}) as EventListener);
 
-self.addEventListener("activate", (event: ExtendableEvent) => {
+workerContext.addEventListener("activate", ((event: ExtendableEvent) => {
   event.waitUntil(
     (async () => {
-      // Clean up old caches
-      const cacheKeys = await caches.keys();
+      const cacheKeys = await workerContext.caches.keys();
       await Promise.all(
         cacheKeys
           .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key))
+          .map((key) => workerContext.caches.delete(key))
       );
     })()
   );
-});
+}) as EventListener);
 
-self.addEventListener("fetch", (event: FetchEvent) => {
+workerContext.addEventListener("fetch", ((event: FetchEvent) => {
   event.respondWith(
     (async () => {
       try {
-        // Try network first
         const response = await fetch(event.request);
 
-        // Cache successful responses
         if (response.ok && event.request.method === "GET") {
-          const cache = await caches.open(CACHE_NAME);
+          const cache = await workerContext.caches.open(CACHE_NAME);
           cache.put(event.request, response.clone());
         }
 
         return response;
       } catch (error) {
-        // If network fails, try cache
-        const cachedResponse = await caches.match(event.request);
+        console.error("error", error);
+        const cachedResponse = await workerContext.caches.match(event.request);
         if (cachedResponse) {
           return cachedResponse;
         }
 
-        // If cache fails, return offline page
         if (event.request.mode === "navigate") {
-          const offlineResponse = await caches.match(OFFLINE_URL);
+          const offlineResponse = await workerContext.caches.match(OFFLINE_URL);
           return offlineResponse || new Response("Offline");
         }
 
@@ -78,14 +130,13 @@ self.addEventListener("fetch", (event: FetchEvent) => {
       }
     })()
   );
-});
+}) as EventListener);
 
-// Handle background sync for failed requests
-self.addEventListener("sync", (event: SyncEvent) => {
+workerContext.addEventListener("sync", ((event: SyncEvent) => {
   if (event.tag === "sync-messages") {
     event.waitUntil(syncMessages());
   }
-});
+}) as EventListener);
 
 async function syncMessages() {
   try {

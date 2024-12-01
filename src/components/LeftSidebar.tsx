@@ -1,18 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Code2,
-  KeyRound,
-  LayoutDashboard,
-  Library,
-  MessageSquarePlus,
-  PenLine,
-  Settings,
-  Share2,
-  Users,
-  Menu,
-  X,
-} from "lucide-react";
+import { MessageSquarePlus, Settings, Menu, X } from "lucide-react";
 import { useState } from "react";
 
 export default function LeftSidebar() {

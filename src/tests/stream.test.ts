@@ -1,5 +1,4 @@
 import { describe, it, expect, vi } from "vitest";
-import { GoogleGenerativeAIStream } from "ai";
 import { POST } from "@/app/api/chat/route";
 
 describe("Stream Handling", () => {

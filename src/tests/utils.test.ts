@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 import { google } from "@/ai-sdk/google";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
 describe("Google AI SDK Utils", () => {
   it("should create a Google AI instance with correct model", () => {

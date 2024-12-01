@@ -21,7 +21,7 @@ interface Usage {
 
 interface ChatCallbacks {
   onResponse?: (response: Response) => void;
-  onFinish?: (message: Message, options: any) => void;
+  onFinish?: (message: Message, options: ChatRequestOptions) => void;
   onError?: (error: Error) => void;
 }
 
@@ -44,10 +44,10 @@ interface ChatDB extends DBSchema {
 }
 
 export function useChatManager(props?: ChatManagerProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { config, setConfig } = useModelConfig();
+  const { config } = useModelConfig();
 
   // Modify useChat initialization to use potentially cached config
   const [cachedConfig, setCachedConfig] = useState<ChatRequestOptions | null>(
@@ -62,7 +62,6 @@ export function useChatManager(props?: ChatManagerProps) {
     setMessages,
     isLoading: isChatLoading,
     stop,
-    error: chatError,
     reload,
   } = useChat({
     api: "/api/chat",
@@ -82,7 +81,7 @@ export function useChatManager(props?: ChatManagerProps) {
     },
     onError: async (error) => {
       logger.error("Chat error occurred", { error });
-      let errorMessage = error.message;
+      const errorMessage = error.message;
 
       setMessages([
         ...chatMessages,
@@ -180,9 +179,7 @@ export function useChatManager(props?: ChatManagerProps) {
           (msg) => msg.id !== messageId
         );
         setMessages(filteredMessages);
-
-        // Resend the message
-        await handleSubmit(new Event("submit") as any);
+        await handleSubmit(new Event("submit"));
       } catch (error) {
         logger.error("Failed to retry message", { error, messageId });
         setError("Failed to retry message");

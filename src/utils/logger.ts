@@ -5,7 +5,7 @@ interface LogEntry {
   level: LogLevel;
   message: string;
   context?: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
 }
 
 class Logger {
@@ -15,7 +15,7 @@ class Logger {
   private createEntry(
     level: LogLevel,
     message: string,
-    data?: Record<string, any>
+    data?: Record<string, unknown>
   ): LogEntry {
     return {
       timestamp: new Date().toISOString(),
@@ -39,19 +39,19 @@ class Logger {
     }
   }
 
-  info(message: string, data?: Record<string, any>) {
+  info(message: string, data?: Record<string, unknown>) {
     const entry = this.createEntry("info", message, data);
     this.store(entry);
     console.info(`[INFO] ${message}`, data);
   }
 
-  warn(message: string, data?: Record<string, any>) {
+  warn(message: string, data?: Record<string, unknown>) {
     const entry = this.createEntry("warn", message, data);
     this.store(entry);
     console.warn(`[WARN] ${message}`, data);
   }
 
-  error(message: string, data?: Record<string, any>) {
+  error(message: string, data?: Record<string, unknown>) {
     const entry = this.createEntry("error", message, data);
     this.store(entry);
     console.error(`[ERROR] ${message}`, data);

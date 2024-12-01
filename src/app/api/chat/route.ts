@@ -1,7 +1,6 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { CoreMessage, streamText } from "ai";
 import { toast } from "sonner";
-import { APICallError } from "ai";
 
 const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_API_KEY || "",
@@ -9,7 +8,7 @@ const google = createGoogleGenerativeAI({
 
 export const runtime = "edge";
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
   const { messages, config = {} } = await req.json();
 
   // Default configuration values

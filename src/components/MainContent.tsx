@@ -44,7 +44,7 @@ export default function MainContent() {
       presencePenalty: Number(config?.presencePenalty) || 0,
     },
     callbacks: {
-      onResponse: (response: Response) => {},
+      onResponse: () => {},
       onFinish: (message, options) => {
         setConfig({
           ...config,
@@ -184,8 +184,12 @@ export default function MainContent() {
                   onClick={() => {
                     handleInputChange({
                       target: { value: prompt.description },
-                    } as any);
-                    handleSubmit(new Event("submit") as any);
+                    } as React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>);
+                    handleSubmit(
+                      new Event(
+                        "submit"
+                      ) as unknown as React.FormEvent<HTMLFormElement>
+                    );
                   }}
                 >
                   <div className="flex items-start gap-3">
@@ -225,7 +229,9 @@ export default function MainContent() {
             </Button>
           ) : (
             <Button
-              onClick={(e) => handleSubmit(e as any)}
+              onClick={(e) =>
+                handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>)
+              }
               disabled={input.length === 0}
             >
               Run

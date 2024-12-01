@@ -1,19 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import {
-  Check,
-  Copy,
-  Download,
-  Edit,
-  FileDown,
-  Loader2,
-  RotateCw,
-  Share,
-  X,
-} from "lucide-react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import React, { useState } from "react";
+import { Check, Copy, Download, Edit, RotateCw, Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -46,7 +34,6 @@ const detectLanguage = (code: string): string => {
 export function CodeBlock({
   code,
   onEdit,
-  isLoading,
   messageGroup,
   timestamp,
   id,
@@ -195,7 +182,7 @@ export function CodeBlock({
         />
       ) : (
         <div className="max-w-full overflow-x-auto mt-4">
-          <MarkdownCodeBlock content={code} language={language} id={id} />
+          <MarkdownCodeBlock content={code} />
         </div>
       )}
     </div>
