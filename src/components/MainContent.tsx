@@ -21,9 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 export default function MainContent() {
   const { config, setConfig } = useModelConfig();
-  const [projectName, setProjectName] = useState(() => {
-    return sessionStorage.getItem("projectName") || "Untitled Prompt";
-  });
+  const [projectName, setProjectName] = useState("Untitled Prompt");
   const [messageCompletionTimes, setMessageCompletionTimes] = useState<
     Record<string, number>
   >({});
@@ -74,6 +72,13 @@ export default function MainContent() {
         messageContainerRef.current.scrollHeight;
     }
   }, [messages]);
+
+  useEffect(() => {
+    const savedName = sessionStorage.getItem("projectName");
+    if (savedName) {
+      setProjectName(savedName);
+    }
+  }, []);
 
   const samplePrompts = [
     {
