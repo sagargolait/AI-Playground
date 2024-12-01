@@ -23,12 +23,14 @@ interface ChatCallbacks {
   onResponse?: (response: Response) => void;
   onFinish?: (message: Message, options: ChatRequestOptions) => void;
   onError?: (error: Error) => void;
+  onSetMessages?: (messages: Message[]) => void;
 }
 
 interface ChatManagerProps {
   config?: ChatRequestOptions;
   callbacks?: ChatCallbacks;
   reload?: () => void;
+  setMessages?: (messages: Message[]) => void;
 }
 
 // Add interface for DB schema
@@ -198,5 +200,6 @@ export function useChatManager(props?: ChatManagerProps) {
     retryMessage,
     stop,
     reload,
+    setMessages,
   };
 }

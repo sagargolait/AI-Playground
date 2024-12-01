@@ -16,6 +16,8 @@ import { CodeBlock } from "./CodeBlock";
 import { useModelConfig } from "@/hooks/useModelConfig";
 import { useState, useRef, useEffect } from "react";
 import { useChatManager } from "@/hooks/useChatManager";
+import { Message } from "ai";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function MainContent() {
   const { config, setConfig } = useModelConfig();
@@ -35,6 +37,7 @@ export default function MainContent() {
     stop,
     error,
     reload,
+    setMessages,
   } = useChatManager({
     config: {
       model: config?.model || "default-model",
@@ -89,6 +92,14 @@ export default function MainContent() {
     },
   ];
 
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+  const [editedContent, setEditedContent] = useState("");
+
+  const handleEditMessage = (message: Message) => {
+    setEditingMessageId(message.id);
+    setEditedContent(message.content);
+  };
+
   const MessageRow = ({
     index,
     style,
@@ -97,6 +108,29 @@ export default function MainContent() {
     style: React.CSSProperties;
   }) => {
     const m = messages[index];
+    const isEditing = editingMessageId === m.id;
+    const [localEditContent, setLocalEditContent] = useState(m.content);
+
+    useEffect(() => {
+      if (isEditing) {
+        setLocalEditContent(m.content);
+      }
+    }, [isEditing, m.content]);
+
+    const handleLocalSave = async () => {
+      const messageIndex = messages.findIndex((msg) => msg.id === m.id);
+      if (messageIndex === -1) return;
+
+      const updatedMessages = [...messages];
+      updatedMessages[messageIndex] = {
+        ...updatedMessages[messageIndex],
+        content: localEditContent,
+      };
+      await setMessages(updatedMessages);
+      await reload();
+      setEditingMessageId(null);
+    };
+
     return (
       <div style={{ ...style, height: "auto" }}>
         <div
@@ -106,15 +140,15 @@ export default function MainContent() {
               : "border border-transparent rounded-md hover:border-white hover:bg-[#0c0e11] transition-colors"
           }`}
         >
-          {m.role === "user" ? (
-            <span className="inline-flex gap-2 text-blue-400">
-              <span className="inline-flex border-none px-2 py-1 text-sm rounded-full bg-green-500 font-bold text-white gap-1 items-center">
-                <User className="h-4 w-4" />
-                User
+          <div className="flex justify-between items-center">
+            {m.role === "user" ? (
+              <span className="inline-flex gap-2 text-blue-400">
+                <span className="inline-flex border-none px-2 py-1 text-sm rounded-full bg-green-500 font-bold text-white gap-1 items-center">
+                  <User className="h-4 w-4" />
+                  User
+                </span>
               </span>
-            </span>
-          ) : (
-            <>
+            ) : (
               <span className="inline-flex items-center gap-2 text-green-400">
                 <span className="inline-flex border border-none px-2 py-1 text-sm rounded-full bg-blue-500 items-center font-bold text-white gap-1">
                   <Bot className="h-4 w-4" />
@@ -129,14 +163,44 @@ export default function MainContent() {
                   <Loader2Icon className="h-4 w-4 animate-spin" />
                 )}
               </span>
-            </>
+            )}
+            {m.role === "user" && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => handleEditMessage(m)}
+                className="opacity-1 group-hover:opacity-100 transition-opacity"
+              >
+                <PenLine className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+
+          {isEditing ? (
+            <div className="mt-2">
+              <Textarea
+                value={localEditContent}
+                onChange={(e) => setLocalEditContent(e.target.value)}
+                className="min-h-[100px] mb-2"
+                autoFocus
+              />
+              <div className="flex gap-2 justify-end">
+                <Button size="sm" onClick={() => setEditingMessageId(null)}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleLocalSave}>
+                  Save
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <CodeBlock
+              code={m.content}
+              isLoading={isLoading}
+              id={m.id}
+              reload={reload}
+            />
           )}
-          <CodeBlock
-            code={m.content}
-            isLoading={isLoading}
-            id={m.id}
-            reload={reload}
-          />
         </div>
       </div>
     );
