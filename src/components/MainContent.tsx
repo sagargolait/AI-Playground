@@ -285,33 +285,35 @@ export default function MainContent() {
 
       <div className="p-2 md:p-4 border-t">
         <form
-          className="flex gap-2 items-center w-full max-w-3xl mx-auto"
+          className="flex gap-2 items-center w-full max-w-3xl mx-auto relative"
           onSubmit={handleSubmit}
         >
           <Input
-            className="flex-1 "
+            className="flex-1 min-w-0"
             placeholder="Type something"
             value={input}
             onChange={handleInputChange}
             disabled={error !== null}
           />
-          <Button variant="ghost" size="icon">
-            <Info className="h-4 w-4" />
-          </Button>
-          {isLoading ? (
-            <Button onClick={stop} variant="destructive">
-              Stop
+          <div className="flex-shrink-0 flex gap-2">
+            <Button variant="ghost" size="icon">
+              <Info className="h-4 w-4" />
             </Button>
-          ) : (
-            <Button
-              onClick={(e) =>
-                handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>)
-              }
-              disabled={input.length === 0}
-            >
-              Run
-            </Button>
-          )}
+            {isLoading ? (
+              <Button onClick={stop} variant="destructive">
+                Stop
+              </Button>
+            ) : (
+              <Button
+                onClick={(e) =>
+                  handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>)
+                }
+                disabled={input.length === 0}
+              >
+                Run
+              </Button>
+            )}
+          </div>
         </form>
       </div>
     </div>
