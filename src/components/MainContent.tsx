@@ -95,11 +95,9 @@ export default function MainContent() {
   ];
 
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
-  const [_, setEditedContent] = useState("");
 
   const handleEditMessage = (message: Message) => {
     setEditingMessageId(message.id);
-    setEditedContent(message.content);
   };
 
   const handleProjectNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
