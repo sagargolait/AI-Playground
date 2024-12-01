@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import { ModelProvider } from "@/contexts/modelContext";
-import { StreamProvider } from "@/contexts/streamContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ClientLayout from "@/components/ClientLayout";
+import { Toaster } from "sonner";
 const roboto = Roboto({
   weight: ["400", "700"], // You can adjust weights as needed
   subsets: ["latin"],
@@ -25,11 +25,20 @@ export default function RootLayout({
       <body className={`${roboto.className} overflow-hidden h-screen`}>
         <ErrorBoundary>
           <ModelProvider>
-            <StreamProvider>
-              <ClientLayout>{children}</ClientLayout>
-            </StreamProvider>
+            <ClientLayout>{children}</ClientLayout>
           </ModelProvider>
         </ErrorBoundary>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              background: "#18181b",
+              color: "#fff",
+              border: "1px solid #27272a",
+            },
+            className: "dark",
+          }}
+        />
       </body>
     </html>
   );

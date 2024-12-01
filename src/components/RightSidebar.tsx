@@ -26,9 +26,34 @@ export default function RightSidebar() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    const loadSavedConfig = async () => {
+      try {
+        const db = await window.indexedDB.open("chat-history", 1);
+        db.onsuccess = (event) => {
+          const database = (event.target as IDBOpenDBRequest).result;
+          const transaction = database.transaction(["messages"], "readonly");
+
+          const store = transaction.objectStore("messages");
+          const request = store.get("history");
+
+          request.onsuccess = () => {
+            if (request.result) {
+              setConfig(request.result.modelConfig);
+            }
+          };
+        };
+      } catch (error) {
+        console.error("Error loading config from IndexedDB:", error);
+      }
+    };
+
+    loadSavedConfig();
+  }, [setConfig]);
+
   const handleReset = () => {
     setConfig({
-      model: "gpt-3.5-turbo",
+      model: "gemini-pro",
       temperature: 1,
       maxTokens: 2048,
       structuredOutput: false,
@@ -64,13 +89,20 @@ export default function RightSidebar() {
     URL.revokeObjectURL(url);
   };
 
+  const modelOptions = [
+    "gemini-pro",
+    "gemini-1.5-pro-latest",
+    "gemini-1.5-flash",
+    "gemini-1.5-flash-latest",
+  ];
+
   return (
     <>
       <Button
         variant="outline"
         size="sm"
         onClick={() => setIsOpen(true)}
-        className="fixed right-4 top-4 lg:hidden z-20 bg-[#1a1a1a]"
+        className="fixed right-4 top-5 lg:hidden z-20 bg-[#1a1a1a]"
       >
         Settings
       </Button>
@@ -116,8 +148,11 @@ export default function RightSidebar() {
                   <SelectValue placeholder="Select a model" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="gpt-4">GPT-4</SelectItem>
-                  <SelectItem value="gpt-3.5-turbo">GPT-3.5 Turbo</SelectItem>
+                  {modelOptions.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

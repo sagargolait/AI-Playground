@@ -13,9 +13,10 @@ import rehypeKatex from "rehype-katex";
 interface CodeBlockProps {
   content: string;
   language?: string;
+  id?: string;
 }
 
-export function MarkdownCodeBlock({ content }: CodeBlockProps) {
+export function MarkdownCodeBlock({ content, id }: CodeBlockProps) {
   return (
     <div className="relative">
       <ReactMarkdown

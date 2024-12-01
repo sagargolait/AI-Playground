@@ -21,7 +21,7 @@ export function useServiceWorker() {
 
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
-        .register("/service-worker.js")
+        .register("/sw.js", { scope: "/" })
         .then((reg) => {
           setRegistration(reg);
 

@@ -11,6 +11,7 @@ import {
   Share2,
   Users,
   Menu,
+  X,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -30,7 +31,7 @@ export default function LeftSidebar() {
       <div
         className={`
         w-full md:w-[200px] lg:w-[280px] border-r flex flex-col bg-[#1a1a1a]
-        fixed md:relative h-full
+        fixed md:relative h-full z-50
         ${
           isMobileMenuOpen
             ? "translate-x-0"
@@ -39,11 +40,18 @@ export default function LeftSidebar() {
         transition-transform duration-200 ease-in-out
       `}
       >
-        <div className="p-4">
+        <div className="p-4 flex justify-between items-center">
           <h1 className="text-xl font-semibold hidden md:block">
             AI Playground
           </h1>
           <h1 className="text-xl font-semibold md:hidden">AI</h1>
+          <Button
+            variant="ghost"
+            className="md:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </div>
         <ScrollArea className="flex-1">
           <div className="p-4 space-y-2">

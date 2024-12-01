@@ -8,7 +8,9 @@ import {
   Edit,
   FileDown,
   Loader2,
+  RotateCw,
   Share,
+  X,
 } from "lucide-react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -27,6 +29,8 @@ interface CodeBlockProps {
   isLoading?: boolean;
   messageGroup?: string;
   timestamp?: number;
+  id?: string;
+  reload?: () => void;
 }
 
 const detectLanguage = (code: string): string => {
@@ -45,11 +49,12 @@ export function CodeBlock({
   isLoading,
   messageGroup,
   timestamp,
+  id,
+  reload,
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedCode, setEditedCode] = useState(code);
-  const codeRef = useRef<HTMLDivElement>(null);
 
   const language = detectLanguage(code);
 
@@ -118,34 +123,14 @@ export function CodeBlock({
     setIsEditing(!isEditing);
   };
 
-  useEffect(() => {
-    if (codeRef.current) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting && isLoading) {
-              // Trigger load more or real-time update logic
-              // This would typically be implemented in a parent component
-            }
-          });
-        },
-        { threshold: 0.1 }
-      );
-
-      observer.observe(codeRef.current);
-      return () => observer.disconnect();
-    }
-  }, [isLoading]);
-
   return (
     <div
-      ref={codeRef}
       className={`relative group bg-primary-700 rounded-lg overflow-hidden max-w-full flex-1 pt-4 ${
         messageGroup ? `message-group-${messageGroup}` : ""
       }`}
       data-timestamp={timestamp}
     >
-      <div className="absolute right-2 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2 z-10">
+      <div className="absolute right-2 top-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
         <Button
           variant="ghost"
           size="icon"
@@ -181,6 +166,16 @@ export function CodeBlock({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        {id && id == "error" && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => reload && reload()}
+          >
+            <RotateCw className="h-4 w-4" />
+          </Button>
+        )}
         {onEdit && (
           <Button
             variant="ghost"
@@ -199,8 +194,8 @@ export function CodeBlock({
           className="w-full h-full min-h-[200px] p-4 bg-zinc-900 text-zinc-50 font-mono break-words whitespace-pre-wrap"
         />
       ) : (
-        <div className="max-w-full overflow-x-auto">
-          <MarkdownCodeBlock content={code} language={language} />
+        <div className="max-w-full overflow-x-auto mt-4">
+          <MarkdownCodeBlock content={code} language={language} id={id} />
         </div>
       )}
     </div>
