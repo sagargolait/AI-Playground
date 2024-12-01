@@ -4,6 +4,7 @@ import "./globals.css";
 import { ModelProvider } from "@/contexts/modelContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { Toaster } from "sonner";
+import PWAProvider from "@/components/PWAProvider";
 
 const roboto = Roboto({
   weight: ["400", "700"],
@@ -24,7 +25,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${roboto.className} overflow-hidden h-screen`}>
         <ErrorBoundary>
-          <ModelProvider>{children}</ModelProvider>
+          <ModelProvider>
+            <PWAProvider>{children}</PWAProvider>
+          </ModelProvider>
         </ErrorBoundary>
         <Toaster
           position="top-right"
