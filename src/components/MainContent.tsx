@@ -234,7 +234,7 @@ export default function MainContent() {
         </div>
       </div>
       <div
-        className="flex flex-1 p-6 overflow-auto custom-scrollbar"
+        className="flex p-6 overflow-auto custom-scrollbar w-full justify-center flex-1"
         ref={messageContainerRef}
       >
         {messages.length !== 0 ? (
@@ -246,7 +246,7 @@ export default function MainContent() {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-center items-center ">
             <h2 className="text-2xl md:text-3xl mb-4">Get started</h2>
             <p className="text-gray-400 mb-8">
               Try a sample prompt or add your own input below
@@ -283,9 +283,9 @@ export default function MainContent() {
         )}
       </div>
 
-      <div className="p-2 md:p-4 border-t">
+      <div className="p-2 md:p-4 border-t mb-safe">
         <form
-          className="flex gap-2 items-center w-full max-w-3xl mx-auto relative"
+          className="flex gap-2 items-center w-full max-w-3xl mx-auto relative pb-4 md:pb-0"
           onSubmit={handleSubmit}
         >
           <Input

@@ -124,3 +124,8 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #6b7280;
 }
+@supports (padding: max(0px)) {
+  .mb-safe {
+    margin-bottom: env(safe-area-inset-bottom, 24px);
+  }
+}
