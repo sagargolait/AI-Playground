@@ -3,10 +3,10 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import { ModelProvider } from "@/contexts/modelContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import ClientLayout from "@/components/ClientLayout";
 import { Toaster } from "sonner";
+
 const roboto = Roboto({
-  weight: ["400", "700"], // You can adjust weights as needed
+  weight: ["400", "700"],
   subsets: ["latin"],
 });
 
@@ -24,9 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${roboto.className} overflow-hidden h-screen`}>
         <ErrorBoundary>
-          <ModelProvider>
-            <ClientLayout>{children}</ClientLayout>
-          </ModelProvider>
+          <ModelProvider>{children}</ModelProvider>
         </ErrorBoundary>
         <Toaster
           position="top-right"
