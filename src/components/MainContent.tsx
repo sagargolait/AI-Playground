@@ -21,7 +21,9 @@ import { Textarea } from "@/components/ui/textarea";
 
 export default function MainContent() {
   const { config, setConfig } = useModelConfig();
-  const [projectName, setProjectName] = useState("");
+  const [projectName, setProjectName] = useState(() => {
+    return sessionStorage.getItem("projectName") || "Untitled Prompt";
+  });
   const [messageCompletionTimes, setMessageCompletionTimes] = useState<
     Record<string, number>
   >({});
@@ -93,11 +95,17 @@ export default function MainContent() {
   ];
 
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
-  const [editedContent, setEditedContent] = useState("");
+  const [_, setEditedContent] = useState("");
 
   const handleEditMessage = (message: Message) => {
     setEditingMessageId(message.id);
     setEditedContent(message.content);
+  };
+
+  const handleProjectNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newName = e.target.value;
+    setProjectName(newName);
+    sessionStorage.setItem("projectName", newName);
   };
 
   const MessageRow = ({
@@ -215,7 +223,7 @@ export default function MainContent() {
             placeholder="Untitled Prompt"
             className="border-0 p-2 bg-transparent"
             value={projectName}
-            onChange={(e) => setProjectName(e.target.value)}
+            onChange={handleProjectNameChange}
           />
           <Button variant="ghost" size="icon">
             <PenLine className="h-4 w-4" />
