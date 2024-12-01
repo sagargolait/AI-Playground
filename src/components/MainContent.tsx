@@ -234,7 +234,7 @@ export default function MainContent() {
         </div>
       </div>
       <div
-        className="flex p-6 overflow-auto custom-scrollbar w-full justify-center flex-1"
+        className="flex p-6 overflow-auto custom-scrollbar w-full justify-center"
         ref={messageContainerRef}
       >
         {messages.length !== 0 ? (
@@ -283,7 +283,7 @@ export default function MainContent() {
         )}
       </div>
 
-      <div className="p-2 md:p-4 border-t mb-safe">
+      <div className="p-2 md:p-4 border-t mt-auto mb-safe">
         <form
           className="flex gap-2 items-center w-full max-w-3xl mx-auto relative pb-4 md:pb-0"
           onSubmit={handleSubmit}
